@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+vcredist-and-msu.exe
+
 # C extensions
 *.so
 
