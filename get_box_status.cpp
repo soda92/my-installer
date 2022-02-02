@@ -58,14 +58,47 @@ std::array<std::string, 2> get_config()
     return std::array<std::string, 2>{state1, state2};
 }
 
+void set_disabled()
+{
+    system("fbwfmgr /disable");
+}
+
+// 参考：https://baike.baidu.com/item/FBWF/6616467
+void set_enabled()
+{
+    system("fbwfmgr /enable");
+    system("fbwfmgr /addvolume C:");
+    system("fbwfmgr /addvolume D:");
+    system("fbwfmgr /addexclusion C:\\Temp");
+    system("fbwfmgr /addexclusion D:\\Temp");
+}
+
 int main(int argc, char **argv)
 {
-    auto result = get_config();
-    if (argc < 2)
+    if (argc < 3)
     {
         return EXIT_FAILURE;
     }
-    auto i = std::stoi(argv[1]);
-    cout << result[i];
-    return EXIT_SUCCESS;
+    std::string command{argv[1]};
+    if (command == "get")
+    {
+        auto i = std::stoi(argv[2]);
+        auto result = get_config();
+        cout << result[i];
+        return EXIT_SUCCESS;
+    }
+    if (command == "set")
+    {
+        command = argv[2];
+        if (command == "enabled")
+        {
+            set_enabled();
+        }
+        if (command == "disabled")
+        {
+            set_disabled();
+        }
+    }
+
+    return EXIT_FAILURE;
 }

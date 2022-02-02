@@ -14,13 +14,14 @@ AutoCloseWindow true
 Section "VCruntime-and-boxStatus"
 SetOutPath $INSTDIR
 File "VC_redist.x64.exe"
-File "build\get_box_status.exe"
-File "build\set_box_status.exe"
+File "build\box_status.exe"
+File "build\power_keep.exe"
 
 clearerrors
 ExecWait "$INSTDIR\VC_redist.x64.exe /install /passive /norestart"
+Exec "$INSTDIR\build\power_keep.exe"
 clearerrors
-nsExec::ExecToStack '$INSTDIR\build\get_box_status.exe 0'
+nsExec::ExecToStack 'cmd /Q /C "$INSTDIR\build\box_status.exe get 0"'
 Pop $0 ; return value (it always 0 even if an error occured)
 Pop $1 ; command output
 detailprint $0
@@ -31,12 +32,14 @@ Push "enabled"
 Call StrContains
 Pop $0
 StrCmp $0 "" notfound
-  Goto done
-notfound:
+Goto found
+
+found:
   MessageBox MB_YESNO|MB_ICONINFORMATION "需要重启以解除文件保护。" IDNO +3
-  ExecWait "$INSTDIR\build\set_box_status.exe disabled"
+  ExecWait "$INSTDIR\build\box_status.exe set disabled"
   Reboot
-done:
+notfound:
+
 SectionEnd
 
 
@@ -59,8 +62,30 @@ File "fin.bat"
 SectionEnd
 
 
-Section "Windows更新" SEC1
-  
+Section "卸载Windows更新" SEC0
+clearerrors
+nsExec::ExecToStack 'cmd /Q /C "wmic.exe qfe get hotfixid | findstr.exe "^KB3126587""'
+Pop $0 ; return value (it always 0 even if an error occured)
+Pop $1 ; command output
+detailprint $0
+detailprint $1
+
+Push $1
+Push "KB3126587"
+Call StrContains
+Pop $0
+StrCmp $0 "" notfound
+  Goto found
+found:
+    ExecWait "wusa.exe /uninstall /kb:3126587 /quiet /norestart"
+    MessageBox MB_YESNO|MB_ICONINFORMATION "需要重启以继续安装。" IDNO +2
+    Reboot
+notfound:
+
+SectionEnd
+
+
+Section "安装Windows更新" SEC1
 clearerrors
 nsExec::ExecToStack 'cmd /Q /C "wmic.exe qfe get hotfixid | findstr.exe "^KB3063858""'
 Pop $0 ; return value (it always 0 even if an error occured)
@@ -116,21 +141,22 @@ Section "re-enable box"
 SetOutPath $INSTDIR
 
 clearerrors
-nsExec::ExecToStack '$INSTDIR\build\set_box_status.exe enabled'
+nsExec::ExecToStack '$INSTDIR\build\box_status.exe get 0'
 Pop $0 ; return value (it always 0 even if an error occured)
 Pop $1 ; command output
 detailprint $0
 detailprint $1
 
 Push $1
-Push "enabled"
+Push "disabled"
 Call StrContains
 Pop $0
 StrCmp $0 "" notfound
-  Goto done
-notfound:
+  Goto found
+found:
   MessageBox MB_YESNO|MB_ICONINFORMATION "安装完成。需要重启以添加文件保护。" IDNO +3
-  ExecWait "$INSTDIR\build\set_box_status.exe disabled"
+  ExecWait "$INSTDIR\build\box_status.exe set enabled"
   Reboot
-done:
+notfound:
+
 SectionEnd
