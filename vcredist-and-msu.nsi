@@ -24,10 +24,11 @@ File "platform_info.py"
 File "postgresql-14.1-1-windows-x64.exe"
 File "python-3.8.10-amd64.exe"
 File "python-package.bat"
-File "qt_simple_window.pyw"
+File "qt_simple_window.py"
 File "VC_redist.x64.exe"
 File "Windows6.1-KB3063858-x64.msu"
 File "wait-finish.py"
+File "fin.bat"
 
 SectionEnd
 
@@ -83,17 +84,10 @@ done:
 
 SectionEnd
 
-Section "postgresql" SEC4
-
-IfFileExists "C:\Program Files\PostgreSQL\14\bin\psql.exe" 0 +2
-  Exec "$INSTDIR\postgresql-14.1-1-windows-x64.exe --mode unattended --unattendedmodeui minimalWithDialogs --datadir C:\PostgreSQL_14_data --create_shortcuts 0 --superpassword 1234"
-SectionEnd
-
 Section "python-package" SEC5
   ExecWait "$INSTDIR\python-package.bat"
 SectionEnd
 
 Section "launch" SEC6
-  ExecWait "$INSTDIR\wait-finish.py"
-  Exec "$INSTDIR\qt_simple_window.pyw"
+  Exec "$INSTDIR\fin.bat"
 SectionEnd
