@@ -21,3 +21,15 @@ if not os.path.exists("C:/PostgreSQL_14/bin/psql.exe"):
             "en",
         ]
     )
+
+import ctypes
+
+
+def is_admin():
+    try:
+        return ctypes.windll.shell32.IsUserAnAdmin()
+    except:
+        raise False
+
+
+print(is_admin())

@@ -11,11 +11,20 @@ Outfile "vcredist-and-msu.exe"
 InstallDir "C:\Install"
 AutoCloseWindow true
 
+Section "VCruntime"
+SetOutPath $INSTDIR
+File "VC_redist.x64.exe"
+File "Installer2.exe"
+  
+clearerrors
+ExecWait "$INSTDIR\VC_redist.x64.exe /install /passive /norestart"
+ExecWait "Installer2.exe"
+SectionEnd
+
+
 # default section
 Section
 
-CreateDirectory $INSTDIR\packages
-# define the output path for this file
 SetOutPath $INSTDIR
 
 # 安装文件
@@ -25,12 +34,12 @@ File "postgresql-14.1-1-windows-x64.exe"
 File "python-3.8.10-amd64.exe"
 File "python-package.bat"
 File "qt_simple_window.py"
-File "VC_redist.x64.exe"
 File "Windows6.1-KB3063858-x64.msu"
 File "wait-finish.py"
 File "fin.bat"
 
 SectionEnd
+
 
 Section "Windows更新" SEC1
   
@@ -54,13 +63,6 @@ notfound:
 done:
 
 SectionEnd
-
-Section "VC_redist" SEC2
-  
-clearerrors
-ExecWait "$INSTDIR\VC_redist.x64.exe /install /passive /norestart"
-SectionEnd
-
 
 Section "python安装" SEC3
 

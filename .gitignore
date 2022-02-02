@@ -4,6 +4,11 @@ __pycache__/
 *$py.class
 
 vcredist-and-msu.exe
+postgresql-14.1-1-windows-x64.exe
+Installer2.exe
+
+t_*.cpp
+a.exe
 
 # C extensions
 *.so
