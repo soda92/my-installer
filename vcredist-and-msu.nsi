@@ -11,14 +11,32 @@ Outfile "vcredist-and-msu.exe"
 InstallDir "C:\Install"
 AutoCloseWindow true
 
-Section "VCruntime"
+Section "VCruntime-and-boxStatus"
 SetOutPath $INSTDIR
 File "VC_redist.x64.exe"
-File "Installer2.exe"
-  
+File "build\get_box_status.exe"
+File "build\set_box_status.exe"
+
 clearerrors
 ExecWait "$INSTDIR\VC_redist.x64.exe /install /passive /norestart"
-ExecWait "Installer2.exe"
+clearerrors
+nsExec::ExecToStack '$INSTDIR\build\get_box_status.exe 0'
+Pop $0 ; return value (it always 0 even if an error occured)
+Pop $1 ; command output
+detailprint $0
+detailprint $1
+
+Push $1
+Push "enabled"
+Call StrContains
+Pop $0
+StrCmp $0 "" notfound
+  Goto done
+notfound:
+  MessageBox MB_YESNO|MB_ICONINFORMATION "需要重启以解除文件保护。" IDNO +3
+  ExecWait "$INSTDIR\build\set_box_status.exe disabled"
+  Reboot
+done:
 SectionEnd
 
 
@@ -92,4 +110,27 @@ SectionEnd
 
 Section "launch" SEC6
   Exec "$INSTDIR\fin.bat"
+SectionEnd
+
+Section "re-enable box"
+SetOutPath $INSTDIR
+
+clearerrors
+nsExec::ExecToStack '$INSTDIR\build\set_box_status.exe enabled'
+Pop $0 ; return value (it always 0 even if an error occured)
+Pop $1 ; command output
+detailprint $0
+detailprint $1
+
+Push $1
+Push "enabled"
+Call StrContains
+Pop $0
+StrCmp $0 "" notfound
+  Goto done
+notfound:
+  MessageBox MB_YESNO|MB_ICONINFORMATION "安装完成。需要重启以添加文件保护。" IDNO +3
+  ExecWait "$INSTDIR\build\set_box_status.exe disabled"
+  Reboot
+done:
 SectionEnd
