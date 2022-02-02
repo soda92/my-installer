@@ -1,2 +1,0 @@
-postgresql-14.1-1-windows-x64.exe filter=lfs diff=lfs merge=lfs -text
-*.exe filter=lfs diff=lfs merge=lfs -text
