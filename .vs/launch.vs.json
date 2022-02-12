@@ -6,7 +6,7 @@
       "type": "default",
       "project": "CMakeLists.txt",
       "projectTarget": "power_keep.exe",
-      "name": "power_keep.exe"
+      "name": "power_keep.exe -local"
     },
     {
       "type": "remoteWindows",
