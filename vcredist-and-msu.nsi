@@ -9,7 +9,7 @@ Outfile "vcredist-and-msu.exe"
 
 # 安装目录
 InstallDir "C:\Install"
-AutoCloseWindow true
+; AutoCloseWindow true
 
 Section "VCruntime-and-boxStatus"
 SetOutPath $INSTDIR

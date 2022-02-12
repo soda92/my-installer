@@ -50,10 +50,10 @@ std::array<std::string, 2> get_config()
         }
     }
 
-    std::ofstream out;
-    out.open("log.txt", std::ios::app);
-    out << state1 << "\n"
-        << state2 << "\n";
+    // std::ofstream out;
+    // out.open("log.txt", std::ios::app);
+    // out << state1 << "\n"
+    //     << state2 << "\n";
 
     return std::array<std::string, 2>{state1, state2};
 }
@@ -71,6 +71,7 @@ void set_enabled()
     system("fbwfmgr /addvolume D:");
     system("fbwfmgr /addexclusion C:\\Temp");
     system("fbwfmgr /addexclusion D:\\Temp");
+    system("fbwfmgr /addexclusion C:\\Users\\user\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup");
 }
 
 int main(int argc, char **argv)
