@@ -1,0 +1,23 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CMakeLists.txt",
+      "projectTarget": "power_keep.exe",
+      "name": "power_keep.exe"
+    },
+    {
+      "type": "remoteWindows",
+      "authenticationType": "windows",
+      "project": "CMakeLists.txt",
+      "projectTarget": "power_keep.exe",
+      "name": "power_keep.exe - remote",
+      "remoteMachineName": "124.193.179.230:40261",
+      "deploy": [],
+      "args": [],
+      "env": {}
+    }
+  ]
+}

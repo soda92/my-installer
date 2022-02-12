@@ -7,6 +7,9 @@ cmd /c "vcvars64.bat & set" | ForEach-Object {
 Pop-Location
 Write-Host "Visual Studio 2022 Command Prompt variables set." -ForegroundColor Green
 
+if (Test-Path -Path build){
+    Remove-Item -Recurse build
+}
 
 cmake -B build -G "Ninja" `
     -DCMAKE_TOOLCHAIN_FILE="D:\src\vcpkg\scripts\buildsystems\vcpkg.cmake" `
