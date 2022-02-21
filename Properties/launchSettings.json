@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "my-installer": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}

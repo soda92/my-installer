@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using System.Windows;
+using System.Text.RegularExpressions;
 var p = Process.Start(
-    new ProcessStartInfo("git", "branch --show-current")
+    new ProcessStartInfo("fbwfmgr", "/getconfig")
     {
         CreateNoWindow = true,
         UseShellExecute = false,
@@ -10,9 +10,13 @@ var p = Process.Start(
         WorkingDirectory = Environment.CurrentDirectory
     }
 );
+if (p == null)
+{
+    return;
+}
 
 p.WaitForExit();
-string branchName = p.StandardOutput.ReadToEnd().TrimEnd();
+string result = p.StandardOutput.ReadToEnd().TrimEnd();
 string errorInfoIfAny = p.StandardError.ReadToEnd().TrimEnd();
 
 if (errorInfoIfAny.Length != 0)
@@ -22,5 +26,9 @@ if (errorInfoIfAny.Length != 0)
 else
 {
     // string message = "Simple MessageBox";
-    MessageBox.Show(branchName);
+    // MessageBox.Show(branchName);
+        Regex regex = new Regex(@"filter state: \W");
+        
+        // Step 2: call Match on Regex instance.
+        Match match = regex.Match(result);
 }
